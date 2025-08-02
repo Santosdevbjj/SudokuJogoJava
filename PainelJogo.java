@@ -154,6 +154,34 @@ public class PainelJogo extends JPanel {
 
 
 
+// ALTEREI AQUI TAMBÉM
+
+public class PainelJogo extends JPanel {
+    
+    // ... (atributos) ...
+    
+    public int getCelulaSelecionadaLinha() {
+        return celulaSelecionadaLinha;
+    }
+
+    public int getCelulaSelecionadaColuna() {
+        return celulaSelecionadaColuna;
+    }
+    
+    public void setCelulaSelecionada(int linha, int coluna) {
+        this.celulaSelecionadaLinha = linha;
+        this.celulaSelecionadaColuna = coluna;
+    }
+    
+    // ...
+}
+ 
+
+
+
+
+
+
 
 
 
