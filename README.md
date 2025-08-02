@@ -1,4 +1,4 @@
-## Bootcamp TONNIE - Java and AI in Europe.
+## Bootcamp TONNIE - Java and AI in Europe, ministrado pela DIO.
 
 ![TonnieJava](https://github.com/user-attachments/assets/7c213a67-451f-4fde-88ba-a48f690e2452)
 
