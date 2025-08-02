@@ -1,7 +1,17 @@
+// src/view/MenuInicial.java
+
+package view;
+
+import model.Tabuleiro;
+import controller.ControladorJogo;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+
+
+
 
 /**
  * A classe MenuInicial é responsável por criar a interface gráfica do menu inicial do jogo Sudoku.
@@ -79,4 +89,70 @@ public class MenuInicial extends JFrame {
         // Ex: new PainelJogo(nome, tamanho);
         this.dispose(); // Fecha a janela do menu inicial
     }
+} 
+
+
+
+
+// FIZ ALTERAÇÃO AQUI
+
+
+
+public class MenuInicial extends JFrame {
+
+    // ... (atributos) ...
+    
+    public MenuInicial() {
+        // ... (código existente) ...
+
+        iniciarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                iniciarJogo();
+            }
+        });
+        
+        // Finaliza o setup da janela
+        pack();
+        setVisible(true);
+    }
+    
+    private void iniciarJogo() {
+        String nome = nomeJogadorField.getText().trim();
+        String tamanhoStr = (String) tamanhoTabuleiroComboBox.getSelectedItem();
+
+        if (nome.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Por favor, insira seu nome.", "Erro", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int tamanho = Integer.parseInt(tamanhoStr.split("x")[0]);
+        this.dispose(); // Fecha a janela do menu inicial
+        
+        // Instancia o tabuleiro, o painel do jogo e o controlador
+        Tabuleiro tabuleiro = new Tabuleiro(tamanho);
+        PainelJogo painelJogo = new PainelJogo(tabuleiro);
+        
+        // Cria a nova janela do jogo
+        JFrame jogoFrame = new JFrame("Sudoku - " + nome);
+        ControladorJogo controlador = new ControladorJogo(tabuleiro, painelJogo, jogoFrame);
+        
+        jogoFrame.add(painelJogo);
+        jogoFrame.pack();
+        jogoFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jogoFrame.setLocationRelativeTo(null);
+        jogoFrame.addKeyListener(controlador);
+        jogoFrame.setVisible(true);
+        
+        painelJogo.setFocusable(true);
+        painelJogo.requestFocusInWindow();
+    }
 }
+
+
+
+
+
+
+
+
