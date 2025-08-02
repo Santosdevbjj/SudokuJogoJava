@@ -219,6 +219,115 @@ public class Tabuleiro {
 
 
 
+// ALTEREI TAMBÉM AQUI
+
+
+
+public class Tabuleiro {
+
+    // ... (código existente) ...
+    
+    /**
+     * Verifica se o tabuleiro está completamente preenchido e se é válido.
+     * @return true se o jogador venceu, false caso contrário.
+     */
+    public boolean isCompleto() {
+        for (int linha = 0; linha < tamanho; linha++) {
+            for (int coluna = 0; coluna < tamanho; coluna++) {
+                if (grade[linha][coluna].getValor() == 0) {
+                    return false; // Tabuleiro não está completo
+                }
+            }
+        }
+        
+        // Se todas as células estão preenchidas, a gente faz uma verificação final
+        // para garantir que o estado do tabuleiro é válido.
+        return isTabuleiroValido();
+    }
+    
+    /**
+     * Verifica se o estado atual do tabuleiro é válido (sem repetições).
+     * Esta é uma checagem mais robusta que o método `isValorValido`.
+     * @return true se o tabuleiro é válido, false caso contrário.
+     */
+    public boolean isTabuleiroValido() {
+        for (int i = 0; i < tamanho; i++) {
+            if (!isLinhaValida(i) || !isColunaValida(i) || !isSubGradeValida(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * Checa se uma linha específica é válida.
+     * @param linha A linha a ser verificada.
+     * @return true se a linha for válida, false caso contrário.
+     */
+    private boolean isLinhaValida(int linha) {
+        boolean[] numerosVistos = new boolean[tamanho + 1];
+        for (int coluna = 0; coluna < tamanho; coluna++) {
+            int valor = grade[linha][coluna].getValor();
+            if (valor != 0) {
+                if (numerosVistos[valor]) {
+                    return false; // Número repetido na linha
+                }
+                numerosVistos[valor] = true;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * Checa se uma coluna específica é válida.
+     * @param coluna A coluna a ser verificada.
+     * @return true se a coluna for válida, false caso contrário.
+     */
+    private boolean isColunaValida(int coluna) {
+        boolean[] numerosVistos = new boolean[tamanho + 1];
+        for (int linha = 0; linha < tamanho; linha++) {
+            int valor = grade[linha][coluna].getValor();
+            if (valor != 0) {
+                if (numerosVistos[valor]) {
+                    return false; // Número repetido na coluna
+                }
+                numerosVistos[valor] = true;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * Checa se uma sub-grade específica é válida.
+     * @param indiceSubGrade O índice da sub-grade (0 a tamanho-1).
+     * @return true se a sub-grade for válida, false caso contrário.
+     */
+    private boolean isSubGradeValida(int indiceSubGrade) {
+        boolean[] numerosVistos = new boolean[tamanho + 1];
+        int inicioLinha = (indiceSubGrade / subGradeTamanho) * subGradeTamanho;
+        int inicioColuna = (indiceSubGrade % subGradeTamanho) * subGradeTamanho;
+
+        for (int i = 0; i < subGradeTamanho; i++) {
+            for (int j = 0; j < subGradeTamanho; j++) {
+                int valor = grade[inicioLinha + i][inicioColuna + j].getValor();
+                if (valor != 0) {
+                    if (numerosVistos[valor]) {
+                        return false; // Número repetido na sub-grade
+                    }
+                    numerosVistos[valor] = true;
+                }
+            }
+        }
+        return true;
+    }
+}
+
+
+
+
+
+
+
 
 
 
