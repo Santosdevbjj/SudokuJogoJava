@@ -9,9 +9,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import main.Main; // Importa a classe principal para reiniciar o jogo
 
-
-
-
 /**
  * A classe ControladorJogo gerencia a interação do jogador com o tabuleiro.
  * Ela é responsável por tratar os eventos do teclado para preencher as células.
@@ -20,100 +17,25 @@ public class ControladorJogo implements KeyListener {
 
     private Tabuleiro tabuleiro;
     private PainelJogo painelJogo;
+    private boolean modoRascunho = false;
+    private JFrame framePrincipal; // Adiciona uma referência à janela principal
 
     /**
      * Construtor para o ControladorJogo.
      * @param tabuleiro A instância do Tabuleiro.
      * @param painelJogo A instância do PainelJogo (a interface gráfica).
+     * @param framePrincipal A janela principal do jogo.
      */
-    public ControladorJogo(Tabuleiro tabuleiro, PainelJogo painelJogo) {
+    public ControladorJogo(Tabuleiro tabuleiro, PainelJogo painelJogo, JFrame framePrincipal) {
         this.tabuleiro = tabuleiro;
         this.painelJogo = painelJogo;
+        this.framePrincipal = framePrincipal;
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // TODO: Implementar a lógica para navegação com a tecla TAB.
-        // A lógica de navegação será mais complexa, focaremos no preenchimento primeiro.
-
-        // Trata a entrada de números
-        char keyChar = e.getKeyChar();
-        if (Character.isDigit(keyChar)) {
-            int valor = Character.getNumericValue(keyChar);
-            // Verifica se uma célula está selecionada e se o valor é válido
-            if (painelJogo.getCelulaSelecionadaLinha() != -1 && painelJogo.getCelulaSelecionadaColuna() != -1) {
-                int linha = painelJogo.getCelulaSelecionadaLinha();
-                int coluna = painelJogo.getCelulaSelecionadaColuna();
-
-                // TODO: Adicionar a verificação para o tamanho máximo permitido (ex: 9 para 9x9).
-                if (tabuleiro.setValor(linha, coluna, valor)) {
-                    // Valor válido, atualiza o tabuleiro e a interface
-                    painelJogo.repaint();
-                } else {
-                    // Valor inválido, pode exibir um feedback visual ou uma mensagem
-                    System.out.println("Valor inválido para esta célula.");
-                }
-            }
-        }
+    public void keyTyped(KeyEvent e) {
+        // Método não utilizado, mas obrigatório pela interface KeyListener
     }
-
-    @Override
-    public void keyReleased(KeyEvent e) {}
-} 
-
-
-
-
-// Alterei aqui
-
-
-public class ControladorJogo implements KeyListener {
-
-    // (atributos e construtor)
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        char keyChar = e.getKeyChar();
-        if (Character.isDigit(keyChar)) {
-            if (painelJogo.getCelulaSelecionadaLinha() != -1 && painelJogo.getCelulaSelecionadaColuna() != -1) {
-                int linha = painelJogo.getCelulaSelecionadaLinha();
-                int coluna = painelJogo.getCelulaSelecionadaColuna();
-                
-                // Verifica se a célula selecionada é fixa antes de permitir a alteração
-                if (tabuleiro.getCelula(linha, coluna).isFixo()) {
-                    System.out.println("Não é possível alterar uma célula fixa.");
-                    return; // Sai do método sem fazer nada
-                }
-
-                int valor = Character.getNumericValue(keyChar);
-                
-                // Valida o valor com base no tamanho do tabuleiro
-                if (valor >= 1 && valor <= tabuleiro.getTamanho()) {
-                    tabuleiro.getCelula(linha, coluna).setValor(valor);
-                    painelJogo.repaint();
-                }
-            }
-        }
-    }
-    
-    // (restante do código)
-}
-
-
-
-// ALTEREI AQUI TAMBÉM
-
-
-public class ControladorJogo implements KeyListener {
-
-    private Tabuleiro tabuleiro;
-    private PainelJogo painelJogo;
-    private boolean modoRascunho = false;
-
-    // ... (construtor existente) ...
 
     @Override
     public void keyPressed(KeyEvent e) {
@@ -123,9 +45,9 @@ public class ControladorJogo implements KeyListener {
         // Lógica de navegação com a tecla TAB
         if (e.getKeyCode() == KeyEvent.VK_TAB) {
             navegarProximaCelula();
-            return; // Sai do método após a navegação
+            return;
         }
-        
+
         // Alterna entre modo de rascunho e preenchimento com Ctrl
         if (e.isControlDown()) {
             modoRascunho = !modoRascunho;
@@ -148,7 +70,7 @@ public class ControladorJogo implements KeyListener {
                 System.out.println("Não é possível alterar uma célula fixa.");
                 return;
             }
-            
+
             // Lógica de rascunho
             if (modoRascunho) {
                 if (tabuleiro.getCelula(linha, coluna).getValor() == 0) {
@@ -173,6 +95,29 @@ public class ControladorJogo implements KeyListener {
             }
             painelJogo.repaint();
         }
+
+        // Depois de qualquer jogada válida, verificamos se o jogo terminou
+        if (!modoRascunho && tabuleiro.isCompleto()) {
+            int opcao = JOptionPane.showConfirmDialog(
+                null,
+                "Parabéns, você completou o Sudoku! Deseja jogar novamente?",
+                "Vitória!",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.INFORMATION_MESSAGE
+            );
+
+            if (opcao == JOptionPane.YES_OPTION) {
+                framePrincipal.dispose(); // Fecha a janela atual do jogo
+                Main.iniciarMenu(); // Chama o método estático para reiniciar o menu
+            } else {
+                System.exit(0); // Sai da aplicação
+            }
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        // Método não utilizado, mas obrigatório pela interface KeyListener
     }
 
     /**
@@ -182,6 +127,12 @@ public class ControladorJogo implements KeyListener {
         int tamanho = tabuleiro.getTamanho();
         int linhaAtual = painelJogo.getCelulaSelecionadaLinha();
         int colunaAtual = painelJogo.getCelulaSelecionadaColuna();
+
+        // Se nenhuma célula estiver selecionada, seleciona a primeira editável
+        if (linhaAtual == -1 || colunaAtual == -1) {
+            linhaAtual = 0;
+            colunaAtual = -1;
+        }
 
         for (int i = 0; i < tamanho * tamanho; i++) {
             colunaAtual++;
@@ -201,106 +152,3 @@ public class ControladorJogo implements KeyListener {
         }
     }
 }
- 
-
-
-// FIZEMOS ALTERAÇÃO AQUI
-
-
-
-public class ControladorJogo implements KeyListener {
-
-    private Tabuleiro tabuleiro;
-    private PainelJogo painelJogo;
-    private boolean modoRascunho = false;
-
-    // ... (construtor existente) ...
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // ... (lógica de navegação e rascunho) ...
-
-        if (Character.isDigit(keyChar)) {
-            // ... (lógica de preenchimento ou rascunho) ...
-            
-            // Depois de qualquer jogada, verificamos se o jogo terminou
-            if (!modoRascunho) {
-                 if (tabuleiro.isCompleto()) {
-                     JOptionPane.showMessageDialog(null, "Parabéns, você completou o Sudoku!", "Vitória!", JOptionPane.INFORMATION_MESSAGE);
-                     // TODO: Implementar lógica para reiniciar o jogo ou fechar a janela
-                 }
-            }
-            painelJogo.repaint();
-        }
-    }
-
-    // ... 
-}
-
-
-
-// MAIS ALTERAÇÃO QUE FIZ
-
-
-
-public class ControladorJogo implements KeyListener {
-
-    private Tabuleiro tabuleiro;
-    private PainelJogo painelJogo;
-    private boolean modoRascunho = false;
-    private JFrame framePrincipal; // Adiciona uma referência à janela principal
-
-    /**
-     * Construtor para o ControladorJogo.
-     * @param tabuleiro A instância do Tabuleiro.
-     * @param painelJogo A instância do PainelJogo.
-     * @param framePrincipal A janela principal do jogo.
-     */
-    public ControladorJogo(Tabuleiro tabuleiro, PainelJogo painelJogo, JFrame framePrincipal) {
-        this.tabuleiro = tabuleiro;
-        this.painelJogo = painelJogo;
-        this.framePrincipal = framePrincipal;
-    }
-
-    // ... (restante do código) ...
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        // ... (lógica de navegação e rascunho) ...
-
-        if (Character.isDigit(keyChar)) {
-            // ... (lógica de preenchimento ou rascunho) ...
-            
-            // Depois de qualquer jogada válida, verificamos se o jogo terminou
-            if (!modoRascunho && tabuleiro.isCompleto()) {
-                 int opcao = JOptionPane.showConfirmDialog(
-                     null, 
-                     "Parabéns, você completou o Sudoku! Deseja jogar novamente?", 
-                     "Vitória!", 
-                     JOptionPane.YES_NO_OPTION, 
-                     JOptionPane.INFORMATION_MESSAGE
-                 );
-                 
-                 if (opcao == JOptionPane.YES_OPTION) {
-                     framePrincipal.dispose(); // Fecha a janela atual do jogo
-                     Main.iniciarMenu(); // Chama o método estático para reiniciar o menu
-                 } else {
-                     System.exit(0); // Sai da aplicação
-                 }
-            }
-            painelJogo.repaint();
-        }
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
