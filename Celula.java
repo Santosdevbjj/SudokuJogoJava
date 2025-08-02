@@ -5,16 +5,17 @@ package model;
 import java.util.ArrayList;
 
 
+
 /**
  * A classe Celula representa uma única célula no tabuleiro de Sudoku.
- * Cada célula armazena um valor numérico e um status que indica se o valor é fixo (original do jogo)
+ * Cada célula armazena um valor numérico, um status que indica se o valor é fixo (original do jogo)
  * ou se foi inserido pelo jogador. Também permite armazenar rascunhos.
  */
 public class Celula {
 
     private int valor;
     private boolean fixo;
-    private int[] rascunhos;
+    private ArrayList<Integer> rascunhos;
 
     /**
      * Construtor para a classe Celula.
@@ -22,10 +23,7 @@ public class Celula {
     public Celula() {
         this.valor = 0; // 0 significa célula vazia
         this.fixo = false;
-        // O array de rascunhos pode ter um tamanho fixo, por exemplo, 9 para o Sudoku 9x9.
-        // Adaptaremos isso dinamicamente dependendo do tamanho do tabuleiro.
-        // Por enquanto, usaremos um tamanho padrão para demonstrar a ideia.
-        this.rascunhos = new int[9];
+        this.rascunhos = new ArrayList<>();
     }
 
     /**
@@ -59,30 +57,6 @@ public class Celula {
     public void setFixo(boolean fixo) {
         this.fixo = fixo;
     }
-}
-
-
-
-
-// ALTEREI AQUI
-
-/**
- * A classe Celula representa uma única célula no tabuleiro de Sudoku.
- * Cada célula armazena um valor numérico, um status fixo e uma lista de rascunhos.
- */
-public class Celula {
-
-    private int valor;
-    private boolean fixo;
-    private ArrayList<Integer> rascunhos;
-
-    public Celula() {
-        this.valor = 0;
-        this.fixo = false;
-        this.rascunhos = new ArrayList<>();
-    }
-
-    // ... (getters e setters existentes) ...
 
     /**
      * Adiciona um número aos rascunhos da célula.
@@ -101,14 +75,14 @@ public class Celula {
     public void removerRascunho(int numero) {
         rascunhos.remove(Integer.valueOf(numero));
     }
-    
+
     /**
      * Limpa todos os rascunhos da célula.
      */
     public void limparRascunhos() {
         rascunhos.clear();
     }
-    
+
     /**
      * Retorna a lista de rascunhos.
      * @return A lista de rascunhos da célula.
@@ -117,10 +91,5 @@ public class Celula {
         return rascunhos;
     }
 }
-
- 
-
-
-
 
 
