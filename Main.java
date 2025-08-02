@@ -1,8 +1,21 @@
+
+// src/main/Main.java
+
+package main;
+
+import javax.swing.SwingUtilities;
+
 import model.Tabuleiro;
 import view.MenuInicial;
 import view.PainelJogo;
 import controller.ControladorJogo;
 import javax.swing.*;
+
+
+
+
+
+
 
 public class Main {
 
@@ -31,4 +44,37 @@ public class Main {
             // painelJogo.requestFocusInWindow();
         });
     }
+} 
+
+
+
+
+// FIZ ALTERAÇÃO AQUI
+
+
+
+public class Main {
+
+    /**
+     * O método main inicia a aplicação, chamando o método de inicialização do menu.
+     */
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(Main::iniciarMenu);
+    }
+    
+    /**
+     * Inicia a janela do menu inicial do jogo.
+     * Este método pode ser chamado para iniciar o jogo pela primeira vez ou para reiniciá-lo.
+     */
+    public static void iniciarMenu() {
+        MenuInicial menu = new MenuInicial();
+        menu.setVisible(true);
+    }
 }
+
+
+
+
+
+
+
