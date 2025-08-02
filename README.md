@@ -22,6 +22,8 @@ Para quem adora uma brincadeira matemática, a regra única do sudoku é mais do
 
 Ao longo do tempo, o passatempo, já popular no Japão, foi conquistando os países ocidentais. 
 
+---
+
 
 **História e Evolução do Jogo de Sudoku:**
 
