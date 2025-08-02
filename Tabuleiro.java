@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * e validar as regras do jogo (linhas, colunas e sub-grades).
  */
 public class Tabuleiro {
-
+    
     private int tamanho;
     private int subGradeTamanho;
     private Celula[][] grade;
@@ -23,6 +23,7 @@ public class Tabuleiro {
      * Construtor para a classe Tabuleiro.
      * @param tamanho O tamanho da grade (ex: 9 para 9x9).
      */
+   
     public Tabuleiro(int tamanho) {
         this.tamanho = tamanho;
         this.grade = new Celula[tamanho][tamanho];
@@ -177,6 +178,61 @@ public class Tabuleiro {
                 grade[linha][coluna].setFixo(true); // Marca como célula fixa
                 celulasRemovidas++;
             }
+        } 
+
+
+
+
+
+// Alterei aqui. 
+
+
+        
+    
+    // (atributos e construtor anterior)
+
+
+    public Tabuleiro(int tamanho) {
+        this.tamanho = tamanho;
+        this.grade = new Celula[tamanho][tamanho];
+        this.subGradeTamanho = (int) Math.sqrt(tamanho);
+
+        if (subGradeTamanho * subGradeTamanho != tamanho) {
+            // Adicionando uma verificação para garantir que o tamanho do tabuleiro
+            // seja um quadrado perfeito, o que é essencial para o Sudoku.
+            throw new IllegalArgumentException("O tamanho do tabuleiro deve ser um quadrado perfeito (9, 16, 25, etc.).");
         }
+
+        // Inicializa todas as células e depois gera o tabuleiro
+        for (int i = 0; i < tamanho; i++) {
+            for (int j = 0; j < tamanho; j++) {
+                this.grade[i][j] = new Celula();
+            }
+        }
+
+        // Chama o método para gerar um tabuleiro completo e válido
+        gerarTabuleiro();
+    }
+    
+    // (restante do código da classe Tabuleiro)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
