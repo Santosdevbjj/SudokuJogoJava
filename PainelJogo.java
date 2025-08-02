@@ -9,12 +9,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
-
-
-
 /**
  * A classe PainelJogo é o componente visual do tabuleiro de Sudoku.
- * Ela é responsável por desenhar a grade, as células, os números e gerenciar a interação visual com o mouse.
+ * Ela é responsável por desenhar a grade, as células, os números, rascunhos e gerenciar a interação visual com o mouse.
  */
 public class PainelJogo extends JPanel {
 
@@ -29,7 +26,7 @@ public class PainelJogo extends JPanel {
      */
     public PainelJogo(Tabuleiro tabuleiro) {
         this.tabuleiro = tabuleiro;
-        this.tamanhoCelula = 500 / tabuleiro.getTamanho(); // Tamanho dinâmico da célula para caber na janela
+        this.tamanhoCelula = 500 / tabuleiro.getTamanho();
         
         setPreferredSize(new Dimension(500, 500));
         addMouseListener(new MouseAdapter() {
@@ -41,7 +38,7 @@ public class PainelJogo extends JPanel {
                 if (linha < tabuleiro.getTamanho() && coluna < tabuleiro.getTamanho()) {
                     celulaSelecionadaLinha = linha;
                     celulaSelecionadaColuna = coluna;
-                    repaint(); // Redesenha o painel para destacar a célula selecionada
+                    repaint();
                 }
             }
         });
@@ -54,7 +51,7 @@ public class PainelJogo extends JPanel {
     }
 
     /**
-     * Desenha a grade do tabuleiro, os números e destaca a célula selecionada.
+     * Desenha a grade do tabuleiro, os números, rascunhos e destaca a célula selecionada.
      * @param g O contexto gráfico.
      */
     private void desenharTabuleiro(Graphics g) {
@@ -68,52 +65,10 @@ public class PainelJogo extends JPanel {
         for (int i = 0; i <= tamanho; i++) {
             int espessura = (i % subGradeTamanho == 0) ? 3 : 1;
             g2d.setStroke(new BasicStroke(espessura));
-            g2d.drawLine(i * tamanhoCelula, 0, i * tamanhoCelula, tamanho * tamanhoCelula); // Linhas verticais
-            g2d.drawLine(0, i * tamanhoCelula, tamanho * tamanhoCelula, i * tamanhoCelula); // Linhas horizontais
+            g2d.setColor(Color.BLACK);
+            g2d.drawLine(i * tamanhoCelula, 0, i * tamanhoCelula, tamanho * tamanhoCelula);
+            g2d.drawLine(0, i * tamanhoCelula, tamanho * tamanhoCelula, i * tamanhoCelula);
         }
-
-        // Preenche as células e desenha os números
-        g2d.setFont(new Font("Arial", Font.BOLD, 24));
-        for (int linha = 0; linha < tamanho; linha++) {
-            for (int coluna = 0; coluna < tamanho; coluna++) {
-                int valor = tabuleiro.getCelula(linha, coluna).getValor();
-                
-                // Destaca a célula selecionada
-                if (linha == celulaSelecionadaLinha && coluna == celulaSelecionadaColuna) {
-                    g2d.setColor(new Color(200, 220, 255)); // Azul claro
-                    g2d.fillRect(coluna * tamanhoCelula + 1, linha * tamanhoCelula + 1, tamanhoCelula - 1, tamanhoCelula - 1);
-                }
-
-                if (valor != 0) {
-                    g2d.setColor(Color.BLACK);
-                    String valorStr = String.valueOf(valor);
-                    FontMetrics fm = g2d.getFontMetrics();
-                    int x = coluna * tamanhoCelula + (tamanhoCelula - fm.stringWidth(valorStr)) / 2;
-                    int y = linha * tamanhoCelula + (tamanhoCelula - fm.getHeight()) / 2 + fm.getAscent();
-                    g2d.drawString(valorStr, x, y);
-                }
-            }
-        }
-    }
-}
-
-
-
-
-
-// ALTEREI AQUI
-
-
-public class PainelJogo extends JPanel {
-
-    // ... (código existente) ...
-
-    /**
-     * Desenha a grade do tabuleiro, os números, rascunhos e destaca a célula selecionada.
-     * @param g O contexto gráfico.
-     */
-    private void desenharTabuleiro(Graphics g) {
-        // ... (desenho de grade e células selecionadas) ...
 
         // Preenche as células e desenha os números ou rascunhos
         for (int linha = 0; linha < tamanho; linha++) {
@@ -121,11 +76,16 @@ public class PainelJogo extends JPanel {
                 int valor = tabuleiro.getCelula(linha, coluna).getValor();
                 ArrayList<Integer> rascunhos = tabuleiro.getCelula(linha, coluna).getRascunhos();
                 
-                // ... (destaque da célula selecionada) ...
+                // Destaca a célula selecionada
+                if (linha == celulaSelecionadaLinha && coluna == celulaSelecionadaColuna) {
+                    g2d.setColor(new Color(200, 220, 255));
+                    g2d.fillRect(coluna * tamanhoCelula + 1, linha * tamanhoCelula + 1, tamanhoCelula - 1, tamanhoCelula - 1);
+                }
 
                 if (valor != 0) {
                     // Se a célula está preenchida, desenha o número em tamanho grande
                     g2d.setColor(tabuleiro.getCelula(linha, coluna).isFixo() ? Color.DARK_GRAY : Color.BLACK);
+                    g2d.setFont(new Font("Arial", Font.BOLD, 24));
                     String valorStr = String.valueOf(valor);
                     FontMetrics fm = g2d.getFontMetrics(g2d.getFont());
                     int x = coluna * tamanhoCelula + (tamanhoCelula - fm.stringWidth(valorStr)) / 2;
@@ -136,7 +96,7 @@ public class PainelJogo extends JPanel {
                     g2d.setColor(Color.LIGHT_GRAY);
                     g2d.setFont(new Font("Arial", Font.PLAIN, 12));
                     
-                    int rascunhoPorLinha = (int) Math.sqrt(tamanho); // Ex: 3 por linha para 9x9
+                    int rascunhoPorLinha = (int) Math.sqrt(tamanho);
                     int rascunhoIndex = 0;
                     
                     for (int rascunho : rascunhos) {
@@ -150,16 +110,7 @@ public class PainelJogo extends JPanel {
             }
         }
     }
-}
 
-
-
-// ALTEREI AQUI TAMBÉM
-
-public class PainelJogo extends JPanel {
-    
-    // ... (atributos) ...
-    
     public int getCelulaSelecionadaLinha() {
         return celulaSelecionadaLinha;
     }
@@ -172,17 +123,4 @@ public class PainelJogo extends JPanel {
         this.celulaSelecionadaLinha = linha;
         this.celulaSelecionadaColuna = coluna;
     }
-    
-    // ...
 }
- 
-
-
-
-
-
-
-
-
-
-
