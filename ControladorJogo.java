@@ -4,8 +4,13 @@ package controller;
 
 import model.Tabuleiro;
 import view.PainelJogo;
+import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+
+
+
 
 /**
  * A classe ControladorJogo gerencia a interação do jogador com o tabuleiro.
@@ -197,6 +202,43 @@ public class ControladorJogo implements KeyListener {
     }
 }
  
+
+
+// FIZEMOS ALTERAÇÃO AQUI
+
+
+
+public class ControladorJogo implements KeyListener {
+
+    private Tabuleiro tabuleiro;
+    private PainelJogo painelJogo;
+    private boolean modoRascunho = false;
+
+    // ... (construtor existente) ...
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        // ... (lógica de navegação e rascunho) ...
+
+        if (Character.isDigit(keyChar)) {
+            // ... (lógica de preenchimento ou rascunho) ...
+            
+            // Depois de qualquer jogada, verificamos se o jogo terminou
+            if (!modoRascunho) {
+                 if (tabuleiro.isCompleto()) {
+                     JOptionPane.showMessageDialog(null, "Parabéns, você completou o Sudoku!", "Vitória!", JOptionPane.INFORMATION_MESSAGE);
+                     // TODO: Implementar lógica para reiniciar o jogo ou fechar a janela
+                 }
+            }
+            painelJogo.repaint();
+        }
+    }
+
+    // ... 
+}
+
+
+
 
 
 
