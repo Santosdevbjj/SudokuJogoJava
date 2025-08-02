@@ -1,67 +1,127 @@
+## Bootcamp TONNIE - Java and AI in Europe.
+
+![TonnieJava](https://github.com/user-attachments/assets/7c213a67-451f-4fde-88ba-a48f690e2452)
+
+
+**Criando um Jogo do Sudoku em Java.**
+
+
+**DESCRIÇÃO:**
+
+Neste desafio, você será responsável por criar um jogo de Sudoku em Java, implementando funcionalidades essenciais para um jogo interativo e funcional no terminal.
+
+O objetivo é consolidar seus conhecimentos em programação orientada a objetos, manipulação de estruturas de dados, uso de métodos e classes, além de lidar com entradas e saídas no terminal.
+
+
+
+**O que é Sudoku?**
+
+Sudoku é um famoso desafio de lógica em que a pessoa jogadora deve distribuir números, letras ou figuras nos espaços em branco do tabuleiro. “Não repita números nas linhas, colunas e blocos.” 
+
+Para quem adora uma brincadeira matemática, a regra única do sudoku é mais do que conhecida.
+
+Ao longo do tempo, o passatempo, já popular no Japão, foi conquistando os países ocidentais. 
+
+
+**História e Evolução do Jogo de Sudoku:**
+
+Embora o sucesso do puzzle por aqui seja relativamente recente, o Sudoku foi criado em 1979. 
+
+O responsável pelo feito foi um construtor de quebra-cabeças, o arquiteto Howard Garns.
+
+Inicialmente chamado de number place (que pode ser traduzido como algo no sentido de lugar numérico), o nome mudou anos depois para sudoku, acrônimo em japonês para “os dígitos devem ser únicos” (Suuji wa dokushin ni kagiru).
+
+
+As regras do jogo são simples: as linhas horizontais e verticais da grade quadriculada devem ser preenchidas com números de 1 a 9, assim como cada um dos nove blocos quadrados.
+
+O desafio é completar todo o sistema sem repetir algarismos nas linhas, colunas ou quadrados.
+
+
+
+Se o jogo traz números de 1 a 9, o resultado da soma de um mesmo bloco, coluna ou linha será sempre 45 (1+2+3+4+5+6+7+8+9). 
+
+
+Assim já é possível ir dando os primeiros passos.
+
+
+Sudoku é um jogo baseado na colocação lógica de números. O objetivo do jogo é a colocação de números de 1 a 9 em cada uma das células vazias numa grade de 9×9, constituída por 3×3 subgrades chamadas regiões.
+
+O quebra-cabeça contém algumas pistas iniciais, que são números inseridos em algumas células, de maneira a permitir uma indução ou dedução dos números em células que estejam vazias. 
+
+Cada coluna, linha e região só pode ter um número de cada um dos 1 a 9. Resolver o problema requer apenas raciocínio lógico e algum tempo. 
+
+Os problemas são normalmente classificados em relação à sua realização.
+
+
+**Quais são as regras básicas do Sudoku?**
+
+A grade do Sudoku consiste em espaços 9x9. Ou 12x12 ou 16x16 ou 25x25 ou 30x30 ou 32x32 ... Etc...
+
+Somente números de 1 a 9 podem ser usados.
+Cada bloco 3x3 pode conter apenas números de 1 a 9.
+
+Cada coluna vertical pode conter apenas números de 1 a 9.
+
+Cada linha horizontal pode conter apenas números de 1 a 9.
+
+Cada número em um bloco 3x3, uma coluna vertical ou uma linha horizontal pode ser usado apenas uma vez.
+
+O jogo termina quando toda a grade do Sudoku está corretamente preenchida com números.
 
 
 
 
-🏗️ Pacotes e descrição das classes
 
-Toda a lógica do jogo está separada em dois pacotes principais:
+**O jogo:**
 
-Pacote sudoku.core: “o motor do jogo”
-
-Cell
-Representa cada célula do tabuleiro. Guarda a posição (linha, coluna), o valor atual (0 para vazio ou de 1 a maxDigit) e uma flag indicando se é uma dica fixa (pista inicial). A célula permite leitura e escrita do valor (exceto se fixa), e também manipula candidatos (rascunho), caso o jogador queira marcar possibilidades.
-
-Board
-Encarrega-se da estrutura do tabuleiro no formato size × size, além das regras de Sudoku: não permitir repetição de valores em linhas, colunas ou blocos. Oferece métodos para acessar células, verificar se uma jogada é válida, listar candidatos para uma posição vazia (eliminação lógica), e verificar se o tabuleiro está completo. Também possui método para criar cópias profundas da instância—fundamental para solver, dicas ou exportação.
-
-SudokuSolver
-Implementa o algoritmo de backtracking que resolve o tabuleiro. Aceita um parâmetro maxSolutions, que costuma ser 2 ao gerar puzzles, para interromper a busca assim que um segundo caminho válido é encontrado. Assim, serve para verificar unicidade da solução e completar o tabuleiro quando necessário.
-
-PuzzleGenerator
-Responsável por gerar o Sudoku “do zero”: primeiro cria uma solução completa via solvers embaralhados, depois remove pistas gradualmente, cada remoção validada para manter única solução. O resultado é um tabuleiro lógico, com retórica humana, pronto para jogar.
-
-HintService
-Controla a lógica de dica (“hint”) dentro do jogo. Ao ser acionado, escolhe rigorosamente uma célula vazia, obtém o valor correto da solução completa (armazenada no PuzzleGenerator) e preenche a célula ou, se assistido no modo “mostrar candidatos”, retorna os valores possíveis conforme lógica de eliminação.
-
-CsvExporter
-Classe utilitária que permite exportar o estado atual do tabuleiro em formato CSV (arquivo de texto com vírgulas), com células vazias representadas por “0”. Ideal para registro, benchmarking ou visualização fora do sistema.
+O jogo tem um menu inicial para o jogador dar o seu nome e escolher o tamanho do tabuleiro a ser utilizado no jogo.
+As opções de tamanho do tabuleiro são:
+9x9 - 12x12 - 16x16 - 25x25 - 30x30 - 32x32
 
 
-Pacote sudoku.ui: “a interface com o jogador”
+Após o jogador digitar o seu nome e escolher o tamanho do tabuleiro, é apresentado o tabuleiro iniciando o jogo, seguindo as regras do Sudoku.
 
-MainMenuFrame
-Uma janela Swing inicial onde o jogador insere seu nome e seleciona o tamanho do tabuleiro (9×9, 12×12, etc.) por meio de um JComboBox. Ao clicar em “Começar”, essa classe chama o controlador principal que instancia o GameFrame.
-
-GameFrame
-Interface principal do jogo. Exibe o tabuleiro de Sudoku como uma grade de campos editáveis, ativando navegação por Tab ou clique do mouse. O jogador pode digitar um número, ver validações imediatas, adicionar ou remover candidatos via painel lateral ou atalho. Contém também botões para “Verificar Solução”, “Dica” (hint), e “Exportar CSV”.
-
-**Main** (package raiz sudoku)
-Ponto de entrada da aplicação: chama o MainMenuFrame dentro do Event Dispatch Thread do Swing. Essa classe inicializa todo o fluxo de interação de maneira simples — apenas o main() que roda a GUI.
+O jogador pode preencher o tabuleiro usando o mouse, ou usando só  o teclado,
+apertando a tecla TAB, indo para as células que estão vazias no tabuleiro.
 
 
 
----
+**Como o desafio de projeto foi desenvolvido:**!
 
-📌 Interação entre as classes
+O projeto do jogo Sudoku em Java foi desenvolvido com foco em uma arquitetura robusta e em uma experiência de usuário agradável. 
 
-Quando o jogo é iniciado, MainMenuFrame cria uma instância de PuzzleGenerator, que gera o tabuleiro (Board) e armazena internamente a solução completa. Em seguida, GameFrame monta a interface visual com base neste Board. À medida que o usuário digita valores ou faz marcações, o GameFrame utiliza os métodos de Board (isValidPlace, getCandidates, etc.) para validar e manter o estado do jogo. Se o usuário solicitar uma dica, HintService é instanciado com o Board atual e a solução pré‑armazenada para preencher uma célula, mantendo o restante intacto. No fim, quando o jogador quiser exportar o progresso, CsvExporter gera um arquivo .csv com o estado atual do tabuleiro. Finalmente, ao clicar em “Verificar solução”, SudokuSolver resolve o tabuleiro para checar se há exatamente uma solução válida — mostrando uma mensagem de vitória caso o tabuleiro esteja completo e correto.
-
-Essa arquitetura modular faz com que cada classe tenha uma responsabilidade bem definida, facilitando testes unitários, manutenção ou extensão futura—como inclusão de modo multiplayer, níveis de dificuldade ou exportação/importação em JSON. A abordagem também reflete boas práticas de projeto recomendadas em guias como o artigo do DEV Community, que destaca clara separação entre lógica de negócio e interface para tornar o README mais legível e funcional mesmo quando exibido como arquivo de texto puro  .
+As classes foram criadas seguindo os princípios de Programação Orientada a Objetos (POO) para garantir a modularidade e a facilidade de manutenção.
 
 
----
-
-🔧 Dica de estilo para o README
-
-Evite tabelas muito densas que dificultem leitura no GitHub ou em visualizadores sombreados no terminal. Em vez disso, use parágrafos corridos com subtítulos para cada grupo de classes.
-
-Mantenha as explicações diretas: o nome da classe, pacote, papel principal, e breve fluxo de interação — isso facilita pra quem está avaliando o código sem precisar compilar.
-
-Siga uma largura de linha de cerca de 80‑100 caracteres no README.md, para que seja legível até em terminals simples, conforme recomendado na documentação de estilo  .
+A estrutura do projeto, com as classes model, view e controller, separa a lógica de negócio da interface gráfica, o que é uma boa prática de desenvolvimento.
 
 
+**O jogo tem as seguintes funcionalidades:**
 
----
 
-Com essa apresentação da arquitetura do projeto e explicação contínua das classes, seu README terá uma clareza elevada e uma aparência profissional, além de facilitar que qualquer avaliador compreenda rapidamente a estrutura do jogo e seus principais componentes.
+ - **Menu inicial** para o jogador inserir seu nome e escolher o tamanho do tabuleiro.
+
+ - **Geração de tabuleiro** com um algoritmo de backtracking, garantindo uma solução válida para cada novo jogo.
+
+ -  **Interface gráfica** interativa que suporta múltiplos tamanhos de tabuleiro.
+
+ -  **Interação com mouse e teclado**, incluindo navegação com a tecla TAB em células editáveis.
+
+ -  **Funcionalidade de rascunho** para ajudar o jogador a resolver o quebra-cabeça.
+
+ -  **Validação de jogadas** em tempo real.
+
+ -  **Verificação de vitória** com a opção de reiniciar o jogo, retornando ao menu inicial.
+
+
+
+
+
+
+
+
+
+
+
+
 
