@@ -6,8 +6,6 @@ import java.util.Random;
 import java.util.Collections;
 import java.util.ArrayList;
 
-
-
 /**
  * A classe Tabuleiro gerencia a matriz de células do jogo Sudoku.
  * É responsável por gerar um tabuleiro válido, remover números para criar o desafio
@@ -23,24 +21,24 @@ public class Tabuleiro {
      * Construtor para a classe Tabuleiro.
      * @param tamanho O tamanho da grade (ex: 9 para 9x9).
      */
-   
     public Tabuleiro(int tamanho) {
         this.tamanho = tamanho;
         this.grade = new Celula[tamanho][tamanho];
 
-        // Calcula o tamanho da sub-grade (ex: 3 para 9x9, 4 para 16x16, etc.)
         this.subGradeTamanho = (int) Math.sqrt(tamanho);
 
-        // Inicializa todas as células
+        if (subGradeTamanho * subGradeTamanho != tamanho) {
+            throw new IllegalArgumentException("O tamanho do tabuleiro deve ser um quadrado perfeito (9, 16, 25, etc.).");
+        }
+
+        // Inicializa todas as células e depois gera o tabuleiro
         for (int i = 0; i < tamanho; i++) {
             for (int j = 0; j < tamanho; j++) {
                 this.grade[i][j] = new Celula();
             }
         }
 
-        // TODO: Implementar a lógica de geração de um tabuleiro completo e válido.
-        // Por enquanto, faremos uma implementação simples para demonstração.
-        // A lógica de geração de Sudoku é complexa, envolvendo backtracking.
+        gerarTabuleiro();
     }
 
     /**
@@ -105,24 +103,18 @@ public class Tabuleiro {
                 }
             }
         }
-
         return true;
     }
-} 
-
-
-
-// xxxxxxxxxxxxxxxxxxxx
 
     /**
      * Gera um tabuleiro de Sudoku completo e válido, e em seguida remove
      * números para criar o quebra-cabeça.
      */
     public void gerarTabuleiro() {
-        preencherTabuleiro(0, 0); // Inicia o preenchimento a partir da primeira célula
+        preencherTabuleiro(0, 0);
         
         // Remove números para criar o desafio
-        removerNumeros(tamanho * tamanho / 2); // Remove metade das células
+        removerNumeros(tamanho * tamanho / 2);
     }
 
     /**
@@ -133,7 +125,7 @@ public class Tabuleiro {
      */
     private boolean preencherTabuleiro(int linha, int coluna) {
         if (linha == tamanho) {
-            return true; // Tabuleiro preenchido
+            return true;
         }
 
         int proximaLinha = (coluna == tamanho - 1) ? linha + 1 : linha;
@@ -143,7 +135,7 @@ public class Tabuleiro {
         for (int i = 1; i <= tamanho; i++) {
             numeros.add(i);
         }
-        Collections.shuffle(numeros); // Embaralha os números para gerar tabuleiros diferentes
+        Collections.shuffle(numeros);
 
         for (int numero : numeros) {
             if (isValorValido(linha, coluna, numero)) {
@@ -151,7 +143,7 @@ public class Tabuleiro {
                 if (preencherTabuleiro(proximaLinha, proximaColuna)) {
                     return true;
                 }
-                grade[linha][coluna].setValor(0); // Backtrack: se não deu certo, limpa a célula
+                grade[linha][coluna].setValor(0); // Backtrack
             }
         }
         return false;
@@ -169,64 +161,13 @@ public class Tabuleiro {
             int coluna = random.nextInt(tamanho);
 
             if (grade[linha][coluna].getValor() != 0) {
-                int valorTemporario = grade[linha][coluna].getValor();
                 grade[linha][coluna].setValor(0); // Remove o número
-                
-                // (Opcional) Verificação de unicidade da solução, mas para este projeto,
-                // uma única solução é suficiente.
-
                 grade[linha][coluna].setFixo(true); // Marca como célula fixa
                 celulasRemovidas++;
             }
-        } 
-
-
-
-
-
-// Alterei aqui. 
-
-
-        
-    
-    // (atributos e construtor anterior)
-
-
-    public Tabuleiro(int tamanho) {
-        this.tamanho = tamanho;
-        this.grade = new Celula[tamanho][tamanho];
-        this.subGradeTamanho = (int) Math.sqrt(tamanho);
-
-        if (subGradeTamanho * subGradeTamanho != tamanho) {
-            // Adicionando uma verificação para garantir que o tamanho do tabuleiro
-            // seja um quadrado perfeito, o que é essencial para o Sudoku.
-            throw new IllegalArgumentException("O tamanho do tabuleiro deve ser um quadrado perfeito (9, 16, 25, etc.).");
         }
-
-        // Inicializa todas as células e depois gera o tabuleiro
-        for (int i = 0; i < tamanho; i++) {
-            for (int j = 0; j < tamanho; j++) {
-                this.grade[i][j] = new Celula();
-            }
-        }
-
-        // Chama o método para gerar um tabuleiro completo e válido
-        gerarTabuleiro();
     }
-    
-    // (restante do código da classe Tabuleiro)
-}
 
-
-
-// ALTEREI TAMBÉM AQUI
-
-
-
-public class Tabuleiro {
-
-    // ... (código existente) ...
-    
     /**
      * Verifica se o tabuleiro está completamente preenchido e se é válido.
      * @return true se o jogador venceu, false caso contrário.
@@ -235,19 +176,15 @@ public class Tabuleiro {
         for (int linha = 0; linha < tamanho; linha++) {
             for (int coluna = 0; coluna < tamanho; coluna++) {
                 if (grade[linha][coluna].getValor() == 0) {
-                    return false; // Tabuleiro não está completo
+                    return false;
                 }
             }
         }
-        
-        // Se todas as células estão preenchidas, a gente faz uma verificação final
-        // para garantir que o estado do tabuleiro é válido.
         return isTabuleiroValido();
     }
     
     /**
      * Verifica se o estado atual do tabuleiro é válido (sem repetições).
-     * Esta é uma checagem mais robusta que o método `isValorValido`.
      * @return true se o tabuleiro é válido, false caso contrário.
      */
     public boolean isTabuleiroValido() {
@@ -270,7 +207,7 @@ public class Tabuleiro {
             int valor = grade[linha][coluna].getValor();
             if (valor != 0) {
                 if (numerosVistos[valor]) {
-                    return false; // Número repetido na linha
+                    return false;
                 }
                 numerosVistos[valor] = true;
             }
@@ -289,7 +226,7 @@ public class Tabuleiro {
             int valor = grade[linha][coluna].getValor();
             if (valor != 0) {
                 if (numerosVistos[valor]) {
-                    return false; // Número repetido na coluna
+                    return false;
                 }
                 numerosVistos[valor] = true;
             }
@@ -312,7 +249,7 @@ public class Tabuleiro {
                 int valor = grade[inicioLinha + i][inicioColuna + j].getValor();
                 if (valor != 0) {
                     if (numerosVistos[valor]) {
-                        return false; // Número repetido na sub-grade
+                        return false;
                     }
                     numerosVistos[valor] = true;
                 }
@@ -321,27 +258,3 @@ public class Tabuleiro {
         return true;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    }
-
