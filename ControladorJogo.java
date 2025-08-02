@@ -1,3 +1,5 @@
+// src/controller/ControladorJogo.java
+
 package controller;
 
 import model.Tabuleiro;
@@ -94,6 +96,110 @@ public class ControladorJogo implements KeyListener {
     
     // (restante do código)
 }
+
+
+
+// ALTEREI AQUI TAMBÉM
+
+
+public class ControladorJogo implements KeyListener {
+
+    private Tabuleiro tabuleiro;
+    private PainelJogo painelJogo;
+    private boolean modoRascunho = false;
+
+    // ... (construtor existente) ...
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int linha = painelJogo.getCelulaSelecionadaLinha();
+        int coluna = painelJogo.getCelulaSelecionadaColuna();
+
+        // Lógica de navegação com a tecla TAB
+        if (e.getKeyCode() == KeyEvent.VK_TAB) {
+            navegarProximaCelula();
+            return; // Sai do método após a navegação
+        }
+        
+        // Alterna entre modo de rascunho e preenchimento com Ctrl
+        if (e.isControlDown()) {
+            modoRascunho = !modoRascunho;
+            System.out.println("Modo Rascunho: " + (modoRascunho ? "Ativado" : "Desativado"));
+            return;
+        }
+
+        // Se uma célula não estiver selecionada, não faz nada
+        if (linha == -1 || coluna == -1) {
+            return;
+        }
+
+        // Lógica de preenchimento ou rascunho
+        char keyChar = e.getKeyChar();
+        if (Character.isDigit(keyChar)) {
+            int valor = Character.getNumericValue(keyChar);
+
+            // Se a célula é fixa, não faz nada
+            if (tabuleiro.getCelula(linha, coluna).isFixo()) {
+                System.out.println("Não é possível alterar uma célula fixa.");
+                return;
+            }
+            
+            // Lógica de rascunho
+            if (modoRascunho) {
+                if (tabuleiro.getCelula(linha, coluna).getValor() == 0) {
+                    // Adiciona ou remove o rascunho
+                    if (tabuleiro.getCelula(linha, coluna).getRascunhos().contains(valor)) {
+                        tabuleiro.getCelula(linha, coluna).removerRascunho(valor);
+                    } else {
+                        tabuleiro.getCelula(linha, coluna).adicionarRascunho(valor);
+                    }
+                }
+            } else {
+                // Lógica de preenchimento
+                if (valor >= 1 && valor <= tabuleiro.getTamanho()) {
+                    if (tabuleiro.setValor(linha, coluna, valor)) {
+                        // Limpa os rascunhos quando um valor é preenchido
+                        tabuleiro.getCelula(linha, coluna).limparRascunhos();
+                    } else {
+                        // feedback de valor inválido
+                        System.out.println("Valor inválido para esta célula.");
+                    }
+                }
+            }
+            painelJogo.repaint();
+        }
+    }
+
+    /**
+     * Navega para a próxima célula editável (não fixa).
+     */
+    private void navegarProximaCelula() {
+        int tamanho = tabuleiro.getTamanho();
+        int linhaAtual = painelJogo.getCelulaSelecionadaLinha();
+        int colunaAtual = painelJogo.getCelulaSelecionadaColuna();
+
+        for (int i = 0; i < tamanho * tamanho; i++) {
+            colunaAtual++;
+            if (colunaAtual >= tamanho) {
+                colunaAtual = 0;
+                linhaAtual++;
+            }
+            if (linhaAtual >= tamanho) {
+                linhaAtual = 0;
+            }
+
+            if (!tabuleiro.getCelula(linhaAtual, colunaAtual).isFixo()) {
+                painelJogo.setCelulaSelecionada(linhaAtual, colunaAtual);
+                painelJogo.repaint();
+                return;
+            }
+        }
+    }
+}
+ 
+
+
+
 
 
 
