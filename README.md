@@ -12,7 +12,7 @@ Neste desafio, você será responsável por criar um jogo de Sudoku em Java, imp
 
 O objetivo é consolidar seus conhecimentos em programação orientada a objetos, manipulação de estruturas de dados, uso de métodos e classes, além de lidar com entradas e saídas no terminal.
 
-
+---
 
 **O que é Sudoku?**
 
@@ -52,6 +52,7 @@ Cada coluna, linha e região só pode ter um número de cada um dos 1 a 9. Resol
 
 Os problemas são normalmente classificados em relação à sua realização.
 
+---
 
 **Quais são as regras básicas do Sudoku?**
 
@@ -68,9 +69,7 @@ Cada número em um bloco 3x3, uma coluna vertical ou uma linha horizontal pode s
 
 O jogo termina quando toda a grade do Sudoku está corretamente preenchida com números.
 
-
-
-
+---
 
 **O jogo:**
 
@@ -84,7 +83,7 @@ Após o jogador digitar o seu nome e escolher o tamanho do tabuleiro, é apresen
 O jogador pode preencher o tabuleiro usando o mouse, ou usando só  o teclado,
 apertando a tecla TAB, indo para as células que estão vazias no tabuleiro.
 
-
+---
 
 **Como o desafio de projeto foi desenvolvido:**!
 
@@ -95,6 +94,8 @@ As classes foram criadas seguindo os princípios de Programação Orientada a Ob
 
 A estrutura do projeto, com as classes model, view e controller, separa a lógica de negócio da interface gráfica, o que é uma boa prática de desenvolvimento.
 
+
+---
 
 **O jogo tem as seguintes funcionalidades:**
 
@@ -114,6 +115,7 @@ A estrutura do projeto, com as classes model, view e controller, separa a lógic
  -  **Verificação de vitória** com a opção de reiniciar o jogo, retornando ao menu inicial.
 
 
+---
 
 **Descrição das classes do jogo Sudoku:**
 
