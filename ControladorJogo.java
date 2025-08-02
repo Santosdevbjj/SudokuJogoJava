@@ -55,4 +55,48 @@ public class ControladorJogo implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {}
+} 
+
+
+
+
+// Alterei aqui
+
+
+public class ControladorJogo implements KeyListener {
+
+    // (atributos e construtor)
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        char keyChar = e.getKeyChar();
+        if (Character.isDigit(keyChar)) {
+            if (painelJogo.getCelulaSelecionadaLinha() != -1 && painelJogo.getCelulaSelecionadaColuna() != -1) {
+                int linha = painelJogo.getCelulaSelecionadaLinha();
+                int coluna = painelJogo.getCelulaSelecionadaColuna();
+                
+                // Verifica se a célula selecionada é fixa antes de permitir a alteração
+                if (tabuleiro.getCelula(linha, coluna).isFixo()) {
+                    System.out.println("Não é possível alterar uma célula fixa.");
+                    return; // Sai do método sem fazer nada
+                }
+
+                int valor = Character.getNumericValue(keyChar);
+                
+                // Valida o valor com base no tamanho do tabuleiro
+                if (valor >= 1 && valor <= tabuleiro.getTamanho()) {
+                    tabuleiro.getCelula(linha, coluna).setValor(valor);
+                    painelJogo.repaint();
+                }
+            }
+        }
+    }
+    
+    // (restante do código)
 }
+
+
+
+
+
+
