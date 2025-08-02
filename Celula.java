@@ -1,4 +1,9 @@
+// src/model/Celula.java
+
 package model;
+
+import java.util.ArrayList;
+
 
 /**
  * A classe Celula representa uma única célula no tabuleiro de Sudoku.
@@ -55,3 +60,67 @@ public class Celula {
         this.fixo = fixo;
     }
 }
+
+
+
+
+// ALTEREI AQUI
+
+/**
+ * A classe Celula representa uma única célula no tabuleiro de Sudoku.
+ * Cada célula armazena um valor numérico, um status fixo e uma lista de rascunhos.
+ */
+public class Celula {
+
+    private int valor;
+    private boolean fixo;
+    private ArrayList<Integer> rascunhos;
+
+    public Celula() {
+        this.valor = 0;
+        this.fixo = false;
+        this.rascunhos = new ArrayList<>();
+    }
+
+    // ... (getters e setters existentes) ...
+
+    /**
+     * Adiciona um número aos rascunhos da célula.
+     * @param numero O número a ser adicionado como rascunho.
+     */
+    public void adicionarRascunho(int numero) {
+        if (!rascunhos.contains(numero)) {
+            rascunhos.add(numero);
+        }
+    }
+
+    /**
+     * Remove um número dos rascunhos da célula.
+     * @param numero O número a ser removido.
+     */
+    public void removerRascunho(int numero) {
+        rascunhos.remove(Integer.valueOf(numero));
+    }
+    
+    /**
+     * Limpa todos os rascunhos da célula.
+     */
+    public void limparRascunhos() {
+        rascunhos.clear();
+    }
+    
+    /**
+     * Retorna a lista de rascunhos.
+     * @return A lista de rascunhos da célula.
+     */
+    public ArrayList<Integer> getRascunhos() {
+        return rascunhos;
+    }
+}
+
+ 
+
+
+
+
+
