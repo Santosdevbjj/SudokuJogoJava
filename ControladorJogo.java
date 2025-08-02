@@ -7,7 +7,7 @@ import view.PainelJogo;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
+import main.Main; // Importa a classe principal para reiniciar o jogo
 
 
 
@@ -235,6 +235,62 @@ public class ControladorJogo implements KeyListener {
     }
 
     // ... 
+}
+
+
+
+// MAIS ALTERAÇÃO QUE FIZ
+
+
+
+public class ControladorJogo implements KeyListener {
+
+    private Tabuleiro tabuleiro;
+    private PainelJogo painelJogo;
+    private boolean modoRascunho = false;
+    private JFrame framePrincipal; // Adiciona uma referência à janela principal
+
+    /**
+     * Construtor para o ControladorJogo.
+     * @param tabuleiro A instância do Tabuleiro.
+     * @param painelJogo A instância do PainelJogo.
+     * @param framePrincipal A janela principal do jogo.
+     */
+    public ControladorJogo(Tabuleiro tabuleiro, PainelJogo painelJogo, JFrame framePrincipal) {
+        this.tabuleiro = tabuleiro;
+        this.painelJogo = painelJogo;
+        this.framePrincipal = framePrincipal;
+    }
+
+    // ... (restante do código) ...
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        // ... (lógica de navegação e rascunho) ...
+
+        if (Character.isDigit(keyChar)) {
+            // ... (lógica de preenchimento ou rascunho) ...
+            
+            // Depois de qualquer jogada válida, verificamos se o jogo terminou
+            if (!modoRascunho && tabuleiro.isCompleto()) {
+                 int opcao = JOptionPane.showConfirmDialog(
+                     null, 
+                     "Parabéns, você completou o Sudoku! Deseja jogar novamente?", 
+                     "Vitória!", 
+                     JOptionPane.YES_NO_OPTION, 
+                     JOptionPane.INFORMATION_MESSAGE
+                 );
+                 
+                 if (opcao == JOptionPane.YES_OPTION) {
+                     framePrincipal.dispose(); // Fecha a janela atual do jogo
+                     Main.iniciarMenu(); // Chama o método estático para reiniciar o menu
+                 } else {
+                     System.exit(0); // Sai da aplicação
+                 }
+            }
+            painelJogo.repaint();
+        }
+    }
 }
 
 
