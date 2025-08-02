@@ -1,6 +1,12 @@
+// src/model/Tabuleiro.java
+
 package model;
 
 import java.util.Random;
+import java.util.Collections;
+import java.util.ArrayList;
+
+
 
 /**
  * A classe Tabuleiro gerencia a matriz de células do jogo Sudoku.
@@ -101,4 +107,76 @@ public class Tabuleiro {
 
         return true;
     }
-}
+} 
+
+
+
+// xxxxxxxxxxxxxxxxxxxx
+
+    /**
+     * Gera um tabuleiro de Sudoku completo e válido, e em seguida remove
+     * números para criar o quebra-cabeça.
+     */
+    public void gerarTabuleiro() {
+        preencherTabuleiro(0, 0); // Inicia o preenchimento a partir da primeira célula
+        
+        // Remove números para criar o desafio
+        removerNumeros(tamanho * tamanho / 2); // Remove metade das células
+    }
+
+    /**
+     * Algoritmo de backtracking para preencher o tabuleiro de forma recursiva.
+     * @param linha A linha atual a ser preenchida.
+     * @param coluna A coluna atual a ser preenchida.
+     * @return true se a grade foi preenchida com sucesso, false caso contrário.
+     */
+    private boolean preencherTabuleiro(int linha, int coluna) {
+        if (linha == tamanho) {
+            return true; // Tabuleiro preenchido
+        }
+
+        int proximaLinha = (coluna == tamanho - 1) ? linha + 1 : linha;
+        int proximaColuna = (coluna == tamanho - 1) ? 0 : coluna + 1;
+
+        ArrayList<Integer> numeros = new ArrayList<>();
+        for (int i = 1; i <= tamanho; i++) {
+            numeros.add(i);
+        }
+        Collections.shuffle(numeros); // Embaralha os números para gerar tabuleiros diferentes
+
+        for (int numero : numeros) {
+            if (isValorValido(linha, coluna, numero)) {
+                grade[linha][coluna].setValor(numero);
+                if (preencherTabuleiro(proximaLinha, proximaColuna)) {
+                    return true;
+                }
+                grade[linha][coluna].setValor(0); // Backtrack: se não deu certo, limpa a célula
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Remove um número específico de células para criar o desafio do Sudoku.
+     * @param numRemocoes O número de células a serem esvaziadas.
+     */
+    private void removerNumeros(int numRemocoes) {
+        Random random = new Random();
+        int celulasRemovidas = 0;
+        while (celulasRemovidas < numRemocoes) {
+            int linha = random.nextInt(tamanho);
+            int coluna = random.nextInt(tamanho);
+
+            if (grade[linha][coluna].getValor() != 0) {
+                int valorTemporario = grade[linha][coluna].getValor();
+                grade[linha][coluna].setValor(0); // Remove o número
+                
+                // (Opcional) Verificação de unicidade da solução, mas para este projeto,
+                // uma única solução é suficiente.
+
+                grade[linha][coluna].setFixo(true); // Marca como célula fixa
+                celulasRemovidas++;
+            }
+        }
+    }
+
