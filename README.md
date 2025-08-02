@@ -115,6 +115,55 @@ A estrutura do projeto, com as classes model, view e controller, separa a lógic
 
 
 
+**Descrição das classes do jogo Sudoku:**
+
+
+**1. Main.java**
+ - **Função:** É o ponto de entrada da aplicação.
+ - **Descrição:** Contém o método main, que inicia a aplicação. Ele cria uma instância da classe MenuInicial na thread de eventos do Swing, garantindo que a interface gráfica seja renderizada corretamente.
+
+
+**2. MenuInicial.java**
+  - **Função:** Interface do menu inicial.
+  - **Descrição:** Esta classe cria a primeira janela do jogo, onde o jogador pode inserir seu nome e escolher o tamanho do tabuleiro. Após o clique no botão "Iniciar Jogo", ela fecha o menu e inicia a janela principal do jogo (PainelJogo).
+
+
+**3. Tabuleiro.java**
+ - **Função:** O modelo e a lógica principal do jogo.
+ - **Descrição:** Gerencia a matriz de células do Sudoku. É responsável por:
+   - Gerar um tabuleiro completo e válido usando um algoritmo de backtracking.
+   - Remover números do tabuleiro para criar o desafio.
+   - Validar jogadas do usuário (checando se o número é válido para a linha, coluna e sub-grade).
+   -  Verificar se o tabuleiro está completo e correto, determinando a vitória do jogador.
+
+
+**4. Celula.java**
+ - **Função:** Representa cada quadrado do tabuleiro.
+ - **Descrição:** É uma classe simples que armazena o estado de uma célula individual. Seus atributos incluem:
+   - valor: O número atual da célula.
+   - fixo: Um booleano que indica se a célula é parte do tabuleiro inicial e não pode ser alterada.
+   -  rascunhos: Uma lista de números que o jogador anotou como possíveis candidatos para a célula.
+
+
+**5. PainelJogo.java**
+ - **Função:** A interface gráfica do tabuleiro.
+ - **Descrição:** Estende JPanel e é a representação visual do jogo. Ela é responsável por:
+   -  Desenhar a grade do tabuleiro, os números e os rascunhos.
+   -  Destacar a célula que está selecionada no momento.
+   - Capturar os cliques do mouse para selecionar uma célula.
+
+
+**6. ControladorJogo.java**
+ - Função: Gerencia a interação entre o jogador e a lógica do jogo.
+ -  Descrição: Atua como o "cérebro" do jogo, respondendo aos eventos do teclado. É responsável por:
+   -  Receber a entrada de números do jogador.
+   -  Alternar entre o modo de preenchimento e o modo de rascunho.
+   -  Validar a jogada com a classe Tabuleiro.
+   -  Navegar entre as células editáveis usando a tecla TAB.
+   -  Verificar a vitória após cada jogada e, se o jogo terminar, perguntar ao jogador se ele deseja jogar novamente.
+
+
+Essa documentação cobre de forma clara e direta a responsabilidade de cada classe, seguindo a arquitetura MVC (Model-View-Controller) que utilizamos. Com isso, o projeto está completo e bem documentado.
 
 
 
