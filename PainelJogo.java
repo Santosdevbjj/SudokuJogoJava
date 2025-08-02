@@ -1,3 +1,5 @@
+// src/view/PainelJogo.java
+
 package view;
 
 import model.Tabuleiro;
@@ -5,6 +7,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+
+
+
 
 /**
  * A classe PainelJogo é o componente visual do tabuleiro de Sudoku.
@@ -90,3 +96,65 @@ public class PainelJogo extends JPanel {
         }
     }
 }
+
+
+
+
+
+// ALTEREI AQUI
+
+
+public class PainelJogo extends JPanel {
+
+    // ... (código existente) ...
+
+    /**
+     * Desenha a grade do tabuleiro, os números, rascunhos e destaca a célula selecionada.
+     * @param g O contexto gráfico.
+     */
+    private void desenharTabuleiro(Graphics g) {
+        // ... (desenho de grade e células selecionadas) ...
+
+        // Preenche as células e desenha os números ou rascunhos
+        for (int linha = 0; linha < tamanho; linha++) {
+            for (int coluna = 0; coluna < tamanho; coluna++) {
+                int valor = tabuleiro.getCelula(linha, coluna).getValor();
+                ArrayList<Integer> rascunhos = tabuleiro.getCelula(linha, coluna).getRascunhos();
+                
+                // ... (destaque da célula selecionada) ...
+
+                if (valor != 0) {
+                    // Se a célula está preenchida, desenha o número em tamanho grande
+                    g2d.setColor(tabuleiro.getCelula(linha, coluna).isFixo() ? Color.DARK_GRAY : Color.BLACK);
+                    String valorStr = String.valueOf(valor);
+                    FontMetrics fm = g2d.getFontMetrics(g2d.getFont());
+                    int x = coluna * tamanhoCelula + (tamanhoCelula - fm.stringWidth(valorStr)) / 2;
+                    int y = linha * tamanhoCelula + (tamanhoCelula - fm.getHeight()) / 2 + fm.getAscent();
+                    g2d.drawString(valorStr, x, y);
+                } else if (!rascunhos.isEmpty()) {
+                    // Se a célula está vazia e tem rascunhos, desenha-os
+                    g2d.setColor(Color.LIGHT_GRAY);
+                    g2d.setFont(new Font("Arial", Font.PLAIN, 12));
+                    
+                    int rascunhoPorLinha = (int) Math.sqrt(tamanho); // Ex: 3 por linha para 9x9
+                    int rascunhoIndex = 0;
+                    
+                    for (int rascunho : rascunhos) {
+                        String rascunhoStr = String.valueOf(rascunho);
+                        int rascunhoX = coluna * tamanhoCelula + (rascunhoIndex % rascunhoPorLinha) * (tamanhoCelula / rascunhoPorLinha) + 5;
+                        int rascunhoY = linha * tamanhoCelula + (rascunhoIndex / rascunhoPorLinha) * (tamanhoCelula / rascunhoPorLinha) + 15;
+                        g2d.drawString(rascunhoStr, rascunhoX, rascunhoY);
+                        rascunhoIndex++;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
