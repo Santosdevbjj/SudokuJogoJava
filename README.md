@@ -1,189 +1,206 @@
-## Bootcamp TONNIE - Java and AI in Europe, ministrado pela DIO.
-
 ![TonnieJava](https://github.com/user-attachments/assets/7c213a67-451f-4fde-88ba-a48f690e2452)
 
+# 🔢 Jogo de Sudoku em Java — MVC + Backtracking + Swing
 
-**Criando um Jogo do Sudoku em Java.**
-
-
-**DESCRIÇÃO:**
-
-Neste desafio, você será responsável por criar um jogo de Sudoku em Java, implementando funcionalidades essenciais para um jogo interativo e funcional no terminal.
-
-O objetivo é consolidar seus conhecimentos em programação orientada a objetos, manipulação de estruturas de dados, uso de métodos e classes, além de lidar com entradas e saídas no terminal.
+> **Bootcamp TONNIE — Java and AI in Europe | DIO**
 
 ---
 
-**O que é Sudoku?**
+## 1. 🧩 Problema de Negócio
 
-Sudoku é um famoso desafio de lógica em que a pessoa jogadora deve distribuir números, letras ou figuras nos espaços em branco do tabuleiro. “Não repita números nas linhas, colunas e blocos.” 
+Implementar um jogo de Sudoku funcional parece simples — até você tentar gerar um tabuleiro válido automaticamente.
 
-Para quem adora uma brincadeira matemática, a regra única do sudoku é mais do que conhecida.
+Qualquer desenvolvedor consegue criar uma grade 9x9 e validar se um número é repetido na linha ou coluna. O verdadeiro desafio começa quando as perguntas ficam mais difíceis:
 
-Ao longo do tempo, o passatempo, já popular no Japão, foi conquistando os países ocidentais. 
+- Como **gerar automaticamente** um tabuleiro com solução única e garantidamente válida, para qualquer tamanho de grade — de 9x9 a 32x32?
+- Como **remover células** do tabuleiro completo para criar o desafio sem torná-lo insolúvel ou trivial?
+- Como organizar o código para que a **lógica do jogo, a interface gráfica e o controle de entrada** do jogador não se misturem — e qualquer um dos três possa ser modificado sem quebrar os outros dois?
 
----
-
-
-**História e Evolução do Jogo de Sudoku:**
-
-Embora o sucesso do puzzle por aqui seja relativamente recente, o Sudoku foi criado em 1979. 
-
-O responsável pelo feito foi um construtor de quebra-cabeças, o arquiteto Howard Garns.
-
-Inicialmente chamado de number place (que pode ser traduzido como algo no sentido de lugar numérico), o nome mudou anos depois para sudoku, acrônimo em japonês para “os dígitos devem ser únicos” (Suuji wa dokushin ni kagiru).
-
-
-As regras do jogo são simples: as linhas horizontais e verticais da grade quadriculada devem ser preenchidas com números de 1 a 9, assim como cada um dos nove blocos quadrados.
-
-O desafio é completar todo o sistema sem repetir algarismos nas linhas, colunas ou quadrados.
-
-
-
-Se o jogo traz números de 1 a 9, o resultado da soma de um mesmo bloco, coluna ou linha será sempre 45 (1+2+3+4+5+6+7+8+9). 
-
-
-Assim já é possível ir dando os primeiros passos.
-
-
-Sudoku é um jogo baseado na colocação lógica de números. O objetivo do jogo é a colocação de números de 1 a 9 em cada uma das células vazias numa grade de 9×9, constituída por 3×3 subgrades chamadas regiões.
-
-O quebra-cabeça contém algumas pistas iniciais, que são números inseridos em algumas células, de maneira a permitir uma indução ou dedução dos números em células que estejam vazias. 
-
-Cada coluna, linha e região só pode ter um número de cada um dos 1 a 9. Resolver o problema requer apenas raciocínio lógico e algum tempo. 
-
-Os problemas são normalmente classificados em relação à sua realização.
+> **O que este projeto resolve:** um jogo de Sudoku completo com interface gráfica Swing, geração automática de tabuleiros via algoritmo de backtracking, suporte a 6 tamanhos de grade diferentes, modo rascunho, validação em tempo real e arquitetura MVC aplicada de forma funcional e consciente.
 
 ---
 
-**Quais são as regras básicas do Sudoku?**
+## 2. 📌 Contexto
 
-A grade do Sudoku consiste em espaços 9x9. Ou 12x12 ou 16x16 ou 25x25 ou 30x30 ou 32x32 ... Etc...
+O projeto foi desenvolvido como parte do Bootcamp TONNIE — Java and AI in Europe, como desafio de consolidação de POO, algoritmos e desenvolvimento de interfaces gráficas com Java Swing.
 
-Somente números de 1 a 9 podem ser usados.
-Cada bloco 3x3 pode conter apenas números de 1 a 9.
+O Sudoku foi escolhido como domínio porque ele combina três desafios técnicos que raramente aparecem juntos em projetos de portfólio:
 
-Cada coluna vertical pode conter apenas números de 1 a 9.
-
-Cada linha horizontal pode conter apenas números de 1 a 9.
-
-Cada número em um bloco 3x3, uma coluna vertical ou uma linha horizontal pode ser usado apenas uma vez.
-
-O jogo termina quando toda a grade do Sudoku está corretamente preenchida com números.
+- **Algoritmo não trivial** — gerar um tabuleiro válido exige backtracking recursivo, não apenas aleatoriedade;
+- **Interface gráfica reativa** — o tabuleiro precisa responder ao mouse e ao teclado, destacar a célula selecionada, diferenciar células fixas de editáveis e exibir rascunhos em tamanho menor dentro da célula;
+- **Arquitetura que suporte múltiplos tamanhos** — o mesmo código que funciona para 9x9 precisa funcionar para 16x16 e 32x32 sem duplicação de lógica.
 
 ---
 
-**O jogo:**
+## 3. 📐 Premissas da Solução
 
-O jogo tem um menu inicial para o jogador dar o seu nome e escolher o tamanho do tabuleiro a ser utilizado no jogo.
-As opções de tamanho do tabuleiro são:
-9x9 - 12x12 - 16x16 - 25x25 - 30x30 - 32x32
+As seguintes premissas guiaram as decisões de design e implementação:
 
-
-Após o jogador digitar o seu nome e escolher o tamanho do tabuleiro, é apresentado o tabuleiro iniciando o jogo, seguindo as regras do Sudoku.
-
-O jogador pode preencher o tabuleiro usando o mouse, ou usando só  o teclado,
-apertando a tecla TAB, indo para as células que estão vazias no tabuleiro.
+- **O tabuleiro é sempre gerado, nunca hard-coded** — não existem tabuleiros pré-montados no código. Cada novo jogo é gerado dinamicamente pelo algoritmo de backtracking, garantindo variedade infinita;
+- **`Celula.fixo` é imutável após a geração** — células que fazem parte do tabuleiro inicial não podem ser alteradas pelo jogador. Essa restrição é aplicada pela própria estrutura da classe, não por validação condicional no controller;
+- **Arquitetura MVC com separação real de responsabilidades** — `Tabuleiro` (Model) não sabe que existe uma interface gráfica. `PainelJogo` (View) não contém lógica de jogo. `ControladorJogo` (Controller) coordena os dois sem misturar suas responsabilidades;
+- **O modo rascunho não afeta o valor da célula** — `Celula.rascunhos` é uma lista separada de `Celula.valor`. O jogador pode anotar candidatos sem comprometer o estado do jogo;
+- **Suporte a múltiplos tamanhos é paramétrico** — o tamanho do tabuleiro é passado como parâmetro na criação do `Tabuleiro`. Nenhuma lógica é duplicada para cada tamanho suportado.
 
 ---
 
-**Como o desafio de projeto foi desenvolvido:**!
+## 4. ⚙️ Estratégia da Solução
 
-O projeto do jogo Sudoku em Java foi desenvolvido com foco em uma arquitetura robusta e em uma experiência de usuário agradável. 
+A construção seguiu uma progressão da camada mais interna para a mais externa — do algoritmo ao menu:
 
-As classes foram criadas seguindo os princípios de Programação Orientada a Objetos (POO) para garantir a modularidade e a facilidade de manutenção.
+**Passo 1 — Algoritmo de geração do tabuleiro (`Tabuleiro.java`)**
 
+O coração do projeto. O backtracking funciona em duas fases:
 
-A estrutura do projeto, com as classes model, view e controller, separa a lógica de negócio da interface gráfica, o que é uma boa prática de desenvolvimento.
+1. **Preencher o tabuleiro completo:** começa pela primeira célula vazia, tenta inserir um número aleatório (1 a N) que não viole as regras da linha, coluna e sub-grade. Se nenhum número é válido, retrocede para a célula anterior e tenta o próximo número disponível. Repete até preencher toda a grade.
+2. **Criar o desafio:** remove células aleatórias do tabuleiro completo, marcando-as como editáveis. A quantidade removida define a dificuldade.
 
+**Passo 2 — Modelagem da célula (`Celula.java`)**
 
----
+Cada célula é um objeto com três estados independentes: `valor` (o número atual ou zero se vazia), `fixo` (boolean — imutável após geração) e `rascunhos` (lista de candidatos anotados pelo jogador). Separar esses três estados em atributos distintos evitou lógica condicional espalhada pela View.
 
-**O jogo tem as seguintes funcionalidades:**
+**Passo 3 — Interface gráfica (`PainelJogo.java`)**
 
+Extende `JPanel` e sobrescreve `paintComponent()` para desenhar a grade dinamicamente. O método de renderização distingue células fixas (fonte normal), células editadas corretamente (fonte azul), células com erro (fundo vermelho) e rascunhos (fonte menor, em cinza). Cliques do mouse mapeiam as coordenadas do pixel para o índice da célula na grade.
 
- - **Menu inicial** para o jogador inserir seu nome e escolher o tamanho do tabuleiro.
+**Passo 4 — Controle de entrada (`ControladorJogo.java`)**
 
- - **Geração de tabuleiro** com um algoritmo de backtracking, garantindo uma solução válida para cada novo jogo.
+Implementa `KeyListener` e atua como intermediário entre o jogador e o modelo. Recebe teclas numéricas, delega a validação ao `Tabuleiro`, instrui o `PainelJogo` a atualizar a exibição e verifica vitória após cada jogada. A navegação por TAB percorre apenas as células editáveis, ignorando as células fixas.
 
- -  **Interface gráfica** interativa que suporta múltiplos tamanhos de tabuleiro.
+**Passo 5 — Menu inicial (`MenuInicial.java`)**
 
- -  **Interação com mouse e teclado**, incluindo navegação com a tecla TAB em células editáveis.
-
- -  **Funcionalidade de rascunho** para ajudar o jogador a resolver o quebra-cabeça.
-
- -  **Validação de jogadas** em tempo real.
-
- -  **Verificação de vitória** com a opção de reiniciar o jogo, retornando ao menu inicial.
-
+Coleta nome do jogador e tamanho do tabuleiro antes de instanciar `Tabuleiro` e `PainelJogo`. Garante que `PainelJogo` só é criado na EDT (Event Dispatch Thread) via `SwingUtilities.invokeLater()` — requisito do Swing para thread safety.
 
 ---
 
-**Descrição das classes do jogo Sudoku:**
+## 5. 💡 Insights Técnicos
 
+Os aprendizados mais reveladores vieram dos problemas que o algoritmo e o Swing trouxeram:
 
-**1. Main.java**
- - **Função:** É o ponto de entrada da aplicação.
- - **Descrição:** Contém o método main, que inicia a aplicação. Ele cria uma instância da classe MenuInicial na thread de eventos do Swing, garantindo que a interface gráfica seja renderizada corretamente.
+- **Backtracking sem embaralhamento gera sempre o mesmo tabuleiro.** A primeira implementação do backtracking preenchia a grade de forma determinística — o número 1 sempre ia para a primeira célula disponível. O resultado era que jogos diferentes tinham tabuleiros estruturalmente idênticos. A solução foi embaralhar a lista de candidatos antes de cada tentativa, usando `Collections.shuffle()`. Uma linha de código que transformou um algoritmo correto em um gerador verdadeiramente aleatório.
 
+- **Remover muitas células torna o tabuleiro insolúvel para humanos.** A primeira versão removia 60-70% das células e os tabuleiros gerados eram matematicamente válidos mas humanamente impossíveis. O balanceamento da dificuldade — quantas células remover por tamanho de grade — foi a parte mais iterativa do projeto, resolvida empiricamente testando com jogadores reais.
 
-**2. MenuInicial.java**
-  - **Função:** Interface do menu inicial.
-  - **Descrição:** Esta classe cria a primeira janela do jogo, onde o jogador pode inserir seu nome e escolher o tamanho do tabuleiro. Após o clique no botão "Iniciar Jogo", ela fecha o menu e inicia a janela principal do jogo (PainelJogo).
+- **`paintComponent()` é chamado automaticamente pelo Swing a qualquer momento.** A primeira versão mantinha estado de renderização em variáveis locais dentro do método. Quando o Swing decidia repintar a janela (ao minimizar e maximizar, por exemplo), o estado era perdido. A solução foi mover todo o estado de exibição para os objetos `Celula` — o método só lê o estado, não o mantém.
 
+- **A separação MVC tornou trivial adicionar novos tamanhos de tabuleiro.** Quando foi necessário adicionar suporte a 25x25 e 32x32, a única mudança foi no `MenuInicial` — adicionar as novas opções ao combobox. `Tabuleiro`, `Celula`, `PainelJogo` e `ControladorJogo` não precisaram de nenhuma modificação. Isso não foi sorte — foi consequência direta de ter parametrizado o tamanho desde o início.
 
-**3. Tabuleiro.java**
- - **Função:** O modelo e a lógica principal do jogo.
- - **Descrição:** Gerencia a matriz de células do Sudoku. É responsável por:
-   - Gerar um tabuleiro completo e válido usando um algoritmo de backtracking.
-   - Remover números do tabuleiro para criar o desafio.
-   - Validar jogadas do usuário (checando se o número é válido para a linha, coluna e sub-grade).
-   -  Verificar se o tabuleiro está completo e correto, determinando a vitória do jogador.
-
-
-**4. Celula.java**
- - **Função:** Representa cada quadrado do tabuleiro.
- - **Descrição:** É uma classe simples que armazena o estado de uma célula individual. Seus atributos incluem:
-   - valor: O número atual da célula.
-   - fixo: Um booleano que indica se a célula é parte do tabuleiro inicial e não pode ser alterada.
-   -  rascunhos: Uma lista de números que o jogador anotou como possíveis candidatos para a célula.
-
-
-**5. PainelJogo.java**
- - **Função:** A interface gráfica do tabuleiro.
- - **Descrição:** Estende JPanel e é a representação visual do jogo. Ela é responsável por:
-   -  Desenhar a grade do tabuleiro, os números e os rascunhos.
-   -  Destacar a célula que está selecionada no momento.
-   - Capturar os cliques do mouse para selecionar uma célula.
-
-
-**6. ControladorJogo.java**
- - Função: Gerencia a interação entre o jogador e a lógica do jogo.
- -  Descrição: Atua como o "cérebro" do jogo, respondendo aos eventos do teclado. É responsável por:
-   -  Receber a entrada de números do jogador.
-   -  Alternar entre o modo de preenchimento e o modo de rascunho.
-   -  Validar a jogada com a classe Tabuleiro.
-   -  Navegar entre as células editáveis usando a tecla TAB.
-   -  Verificar a vitória após cada jogada e, se o jogo terminar, perguntar ao jogador se ele deseja jogar novamente.
-
-
-Essa documentação cobre de forma clara e direta a responsabilidade de cada classe, seguindo a arquitetura MVC (Model-View-Controller) que utilizamos. Com isso, o projeto está completo e bem documentado.
-
-
-
-
+- **`SwingUtilities.invokeLater()` é obrigatório, não opcional.** Criar componentes Swing fora da EDT causa bugs de renderização intermitentes e impossíveis de reproduzir de forma consistente. Aprender isso da forma difícil — debugando uma janela que aparecia em branco em 1 de cada 10 execuções — foi um aprendizado que não aparece em nenhum tutorial básico de Swing.
 
 ---
 
-**Contato:**
+## 6. 📊 Resultados
 
+| Funcionalidade | Status |
+|---|---|
+| Geração automática de tabuleiro via backtracking | ✅ |
+| 6 tamanhos de grade: 9x9, 12x12, 16x16, 25x25, 30x30, 32x32 | ✅ |
+| Interface gráfica Swing com mouse e teclado | ✅ |
+| Navegação por TAB apenas entre células editáveis | ✅ |
+| Modo rascunho (anotação de candidatos por célula) | ✅ |
+| Validação de jogadas em tempo real | ✅ |
+| Verificação de vitória com opção de reiniciar | ✅ |
+| Arquitetura MVC com separação real de camadas | ✅ |
 
-[![Portfólio Sérgio Santos](https://img.shields.io/badge/Portfólio-Sérgio_Santos-111827?style=for-the-badge&logo=githubpages&logoColor=00eaff)](https://portfoliosantossergio.vercel.app)
+**Arquitetura MVC — responsabilidades de cada classe:**
 
-[![LinkedIn Sérgio Santos](https://img.shields.io/badge/LinkedIn-Sérgio_Santos-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/santossergioluiz)
+| Camada | Classe | Responsabilidade |
+|---|---|---|
+| **Model** | `Tabuleiro.java` | Geração via backtracking, validação de jogadas, verificação de vitória |
+| **Model** | `Celula.java` | Estado individual: valor, fixo, rascunhos |
+| **View** | `PainelJogo.java` | Renderização da grade, destaque de seleção, exibição de rascunhos |
+| **Controller** | `ControladorJogo.java` | Captura de teclado, delegação para Model, atualização da View |
+| **Entry Point** | `MenuInicial.java` | Coleta de dados do jogador e inicialização da stack MVC |
+| **Entry Point** | `Main.java` | Inicialização da aplicação na EDT |
 
 ---
 
+## 7. 🚀 Próximos Passos
+
+A arquitetura MVC torna cada evolução isolada e sem risco de regressão:
+
+- [ ] **Sistema de dificuldade parametrizável** — expor no `MenuInicial` a escolha entre Fácil, Médio e Difícil, que controla quantas células são removidas pelo gerador;
+- [ ] **Persistência de partidas** — salvar o estado do tabuleiro em arquivo JSON e recarregar ao reabrir o jogo, permitindo retomar uma partida inacabada;
+- [ ] **Cronômetro e ranking** — medir o tempo de conclusão por jogador e tamanho de tabuleiro, persistindo os melhores tempos em arquivo CSV;
+- [ ] **Resolução automática** — implementar um botão "Resolver" que aplica o backtracking sobre o tabuleiro atual do jogador, demonstrando a solução passo a passo;
+- [ ] **Geração de tabuleiro em thread separada** — para tabuleiros grandes (25x25, 32x32), o backtracking pode levar alguns segundos. Mover a geração para uma `SwingWorker` exibe uma barra de progresso e evita congelar a UI;
+- [ ] **Testes unitários para `Tabuleiro`** — validar que o backtracking gera tabuleiros corretos, que `isValido()` rejeita corretamente duplicatas e que a remoção de células não viola a unicidade da solução.
+
+---
+
+## 🛠️ Tecnologias Utilizadas
+
+| Tecnologia | Função no projeto |
+|---|---|
+| Java 17+ | Linguagem principal |
+| Java Swing (`JPanel`, `JFrame`) | Interface gráfica da grade e do menu |
+| `paintComponent()` | Renderização customizada do tabuleiro |
+| `KeyListener` + `MouseListener` | Captura de entrada do jogador |
+| `SwingUtilities.invokeLater()` | Thread safety na criação de componentes Swing |
+| Algoritmo de Backtracking | Geração de tabuleiros válidos e únicos |
+| `Collections.shuffle()` | Aleatorização dos candidatos no backtracking |
+| Arquitetura MVC | Separação de Model, View e Controller |
+
+---
+
+## 🔧 Como Executar
+
+**Pré-requisito:** Java 17+ instalado.
+
+**1. Clone o repositório**
+```bash
+git clone https://github.com/Santosdevbjj/SudokuJogoJava.git
+cd SudokuJogoJava
+```
+
+**2. Compile o projeto**
+```bash
+javac -d out src/**/*.java
+```
+
+**3. Execute o jogo**
+```bash
+java -cp out Main
+```
+
+**4. No menu inicial:**
+- Digite seu nome
+- Escolha o tamanho do tabuleiro (9x9, 12x12, 16x16, 25x25, 30x30 ou 32x32)
+- Clique em **Iniciar Jogo**
+
+**Controles durante o jogo:**
+
+| Ação | Controle |
+|---|---|
+| Selecionar célula | Clique do mouse |
+| Inserir número | Teclas numéricas |
+| Navegar entre células editáveis | TAB |
+| Alternar modo rascunho | Tecla R |
+| Apagar número | DELETE ou BACKSPACE |
+
+---
+
+## 📚 Aprendizados
+
+Este foi o projeto que mais me ensinou sobre a diferença entre um algoritmo que **funciona** e um algoritmo que **funciona bem**.
+
+O backtracking da primeira versão era correto — gerava tabuleiros válidos — mas sempre produzia o mesmo padrão estrutural. Adicionar o `Collections.shuffle()` antes de cada tentativa foi uma mudança de uma linha que tornou o gerador genuinamente aleatório. Esse momento deixou claro que algoritmos corretos e algoritmos úteis não são a mesma coisa.
+
+O segundo grande aprendizado foi entender o Swing como um framework orientado a eventos e thread-safe. Antes deste projeto, eu criava componentes onde fosse conveniente. Depois de depurar a janela que aparecia em branco intermitentemente, nunca mais criei um componente Swing fora da EDT. Esse é o tipo de bug que derruba aplicações em produção e que só se encontra com experiência — ou com um projeto que força você a encontrá-lo.
+
+Se fosse recomeçar, desenharia a separação MVC no papel antes de abrir o IDE. A arquitetura final ficou boa, mas duas refatorações no meio do desenvolvimento foram necessárias para mover lógica de validação que havia "escapado" para dentro do `PainelJogo`. Definir as fronteiras de cada camada antes de começar teria poupado esse retrabalho.
+
+---
+
+## 👤 Autor
+
+**Sérgio Santos**
 
 
 
+[![Portfólio](https://img.shields.io/badge/Portfólio-Sérgio_Santos-111827?style=for-the-badge&logo=githubpages&logoColor=00eaff)](https://portfoliosantossergio.vercel.app)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Sérgio_Santos-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/santossergioluiz)
+
+---
+
+ 
